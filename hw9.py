@@ -28,6 +28,10 @@ def get_elms_for_atr_val(tag,atr,val):
 def get_text(e):
    lst=[]
    # ............
+   if (e.nodeType == 3 || e.nodeType == 4):
+      lst.append(e.nodeValue)
+   else:
+      get_text(e.nextSibling)
    return lst
 
 # replace whitespace chars
@@ -53,7 +57,7 @@ def extract_values(dm):
    lst = []
    l = get_elms_for_atr_val('table','class','most_actives')
    # ............
-   #    get_text(e)
+       get_text(e)
    # ............
    return lst
 
