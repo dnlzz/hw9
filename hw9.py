@@ -9,7 +9,7 @@ import commands
 import re
 import sys
 
-import MySQLdb
+#import MySQLdb
 
 from xml.dom.minidom import parse, parseString
 
@@ -21,17 +21,24 @@ def get_elms_for_atr_val(tag,atr,val):
    lst=[]
    elms = dom.getElementsByTagName(tag)
    # ............
+   count = 0
+   for e in elms:
+      if e.nodeType == 1:
+         lst.append(e)
+         count += 1
 
+   print count + " is the count"
    return lst
 
 # get all text recursively to the bottom
 def get_text(e):
    lst=[]
    # ............
-   if (e.nodeType == 3 || e.nodeType == 4):
+   if (e.nodeType == 3 or e.nodeType == 4):
       lst.append(e.nodeValue)
    else:
-      get_text(e.nextSibling)
+      for x in e.childNodes:
+         lst = lst + get_text(e)
    return lst
 
 # replace whitespace chars
@@ -51,32 +58,45 @@ def replace_non_alpha_numeric(s):
 # use: java -jar tagsoup-1.2.jar --files html_file
 def html_to_xml(fn):
    # ............
+   xhtml_file = os.system('java -jar tagsoup-1.2.1.jar --files ' + fn)   
    return xhtml_file
 
 def extract_values(dm):
    lst = []
-   l = get_elms_for_atr_val('table','class','most_actives')
+   #l = get_elms_for_atr_val('table','class','most_actives')
    # ............
-       get_text(e)
+   lst = get_text(dm)
    # ............
    return lst
+
+def tr_to_dict(x):
+   d={}
+   lst=x[1].split(' (')
+   d['name']=lst[0]
+
+   return d
 
 # mysql> describe most_active;
 def insert_to_db(l,tbl):
    # ............
 
-# show databases;
-# show tables;
+   # show databases;
+   # show tables;
+   return 0
+   
 def main():
    html_fn = sys.argv[1]
    fn = html_fn.replace('.html','')
-   xhtml_fn = html_to_xml(html_fn)
-
+   #fn = html_fn.replace('.xhtml','')
+   #xhtml_fn = html_to_xml(html_fn)
+   html_to_xml(html_fn)
+   xhtml_fn = fn + ".xhtml"
    global dom
    dom = parse(xhtml_fn)
-
    lst = extract_values(dom)
-
+   
+   print lst
+   """
    # make sure your mysql server is up and running
    cursor = insert_to_db(lst,fn) # fn = table name for mysql
 
@@ -84,7 +104,7 @@ def main():
 
    # make sure the Apache web server is up and running
    # write a PHP script to display the table(s) on your browser
-
+   """
    return xml
 # end of main()
 
