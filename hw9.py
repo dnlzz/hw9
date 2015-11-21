@@ -25,17 +25,15 @@ def get_elms_for_atr_val(tag,atr,val):
    for e in elms:
       if e.nodeType == 1:
          lst.append(e)
-         count += 1
-
-   print count + " is the count"
    return lst
 
 # get all text recursively to the bottom
 def get_text(e):
-   lst=[]
+   lst=[]   
    # ............
-   if (e.nodeType == 3 or e.nodeType == 4):
-      lst.append(e.nodeValue)
+   if ( (e.nodeType == 3) or (e.nodeType == 4) ):
+      print e
+      #lst.append(e.nodeValue)
    else:
       for x in e.childNodes:
          lst = lst + get_text(e)
@@ -63,9 +61,10 @@ def html_to_xml(fn):
 
 def extract_values(dm):
    lst = []
-   #l = get_elms_for_atr_val('table','class','most_actives')
+   l = get_elms_for_atr_val('table','class','most_actives')
    # ............
-   lst = get_text(dm)
+   elms = dom.getElementsByTagName('tr')
+   lst = get_text(elms)
    # ............
    return lst
 
@@ -89,7 +88,7 @@ def main():
    fn = html_fn.replace('.html','')
    #fn = html_fn.replace('.xhtml','')
    #xhtml_fn = html_to_xml(html_fn)
-   html_to_xml(html_fn)
+   xml = html_to_xml(html_fn)
    xhtml_fn = fn + ".xhtml"
    global dom
    dom = parse(xhtml_fn)
