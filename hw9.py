@@ -21,7 +21,6 @@ def get_elms_for_atr_val(tag,atr,val):
    lst=[]
    elms = dom.getElementsByTagName(tag)
    # ............
-   count = 0
    for e in elms:
       if e.nodeType == 1:
          lst.append(e)
@@ -31,12 +30,12 @@ def get_elms_for_atr_val(tag,atr,val):
 def get_text(e):
    lst=[]   
    # ............
-   if ( (e.nodeType == 3) or (e.nodeType == 4) ):
-      print e
-      #lst.append(e.nodeValue)
+   if e.nodeType in (3, 4):
+      lst.append(e.nodeValue)
    else:
       for x in e.childNodes:
          lst = lst + get_text(e)
+         print len(lst)
    return lst
 
 # replace whitespace chars
@@ -61,10 +60,11 @@ def html_to_xml(fn):
 
 def extract_values(dm):
    lst = []
-   l = get_elms_for_atr_val('table','class','most_actives')
+   #l = get_elms_for_atr_val('tr','class','most_actives')
    # ............
-   elms = dom.getElementsByTagName('tr')
-   lst = get_text(elms)
+   l = dom.getElementsByTagName('tr')
+   for ele in l:
+      lst.append(get_text(ele))
    # ............
    return lst
 
@@ -92,9 +92,9 @@ def main():
    xhtml_fn = fn + ".xhtml"
    global dom
    dom = parse(xhtml_fn)
+   
    lst = extract_values(dom)
    
-   print lst
    """
    # make sure your mysql server is up and running
    cursor = insert_to_db(lst,fn) # fn = table name for mysql
