@@ -34,8 +34,7 @@ def get_text(e):
       lst.append(e.nodeValue)
    else:
       for x in e.childNodes:
-         lst = lst + get_text(e)
-         print len(lst)
+         lst = lst + get_text(x)
    return lst
 
 # replace whitespace chars
@@ -62,9 +61,19 @@ def extract_values(dm):
    lst = []
    #l = get_elms_for_atr_val('tr','class','most_actives')
    # ............
-   l = dom.getElementsByTagName('tr')
-   for ele in l:
-      lst.append(get_text(ele))
+   #need to make list 100 elements here with filter...
+
+   l_trs = dom.getElementsByTagName('tr')
+   filtered = filter(lambda x: len(x.childNodes)==6, l_trs)
+   del filtered[0]
+   print len(filtered)
+   
+   l_txts = map(lambda x: get_text(x), filtered)
+   print len(l_txts)
+
+   for e in l_txts:
+      print e
+
    # ............
    return lst
 
@@ -72,6 +81,12 @@ def tr_to_dict(x):
    d={}
    lst=x[1].split(' (')
    d['name']=lst[0]
+   d['symbol']=lst[0]
+   d['name']=lst[0]
+   d['name']=lst[0]
+   d['name']=lst[0]
+   d['name']=lst[0]
+   
 
    return d
 
