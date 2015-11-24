@@ -81,13 +81,12 @@ def tr_to_dict(x):
    d={}
    lst=x[1].split(' (')
    d['name']=lst[0]
-   d['symbol']=lst[0]
-   d['name']=lst[0]
-   d['name']=lst[0]
-   d['name']=lst[0]
-   d['name']=lst[0]
+   d['symbol']=lst[1]
+   d['volume']=lst[2]
+   d['price']=lst[3]
+   d['change']=lst[4]
+   d['percent_change']=lst[5]
    
-
    return d
 
 # mysql> describe most_active;
