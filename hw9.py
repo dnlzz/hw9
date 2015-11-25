@@ -66,26 +66,27 @@ def extract_values(dm):
    l_trs = dom.getElementsByTagName('tr')
    filtered = filter(lambda x: len(x.childNodes)==6, l_trs)
    del filtered[0]
-   print len(filtered)
+   #print len(filtered)
    
    l_txts = map(lambda x: get_text(x), filtered)
-   print len(l_txts)
+   #print len(l_txts)
+   l_dict = map(lambda x: tr_to_dict(x), l_txts)
 
-   for e in l_txts:
-      print e
+   lst = l_dict
 
    # ............
    return lst
 
-def tr_to_dict(x):
+def tr_to_dict(lst):
    d={}
-   lst=x[1].split(' (')
-   d['name']=lst[0]
-   d['symbol']=lst[1]
-   d['volume']=lst[2]
-   d['price']=lst[3]
-   d['change']=lst[4]
-   d['percent_change']=lst[5]
+   name_sym=lst[2].split(' (')
+   name_sym[1] = replace_non_alpha_numeric(name_sym[1])
+   d['name']=name_sym[0]
+   d['symbol']=name_sym[1]
+   d['volume']=lst[4]
+   d['price']=lst[5]
+   d['change']=lst[6]
+   d['percent_change']=lst[7]
    
    return d
 
@@ -109,15 +110,18 @@ def main():
    
    lst = extract_values(dom)
    
-   """
+   #print "List of Lists"
+   print lst
+      
    # make sure your mysql server is up and running
-   cursor = insert_to_db(lst,fn) # fn = table name for mysql
+   # db = mysql.connect('localhost', 'root', 'apple')
+   #cursor = insert_to_db(lst,fn) # fn = table name for mysql
 
-   l = select_from_db(cursor,fn) # display the table on the screen
+   #l = select_from_db(cursor,fn) # display the table on the screen
 
    # make sure the Apache web server is up and running
    # write a PHP script to display the table(s) on your browser
-   """
+
    return xml
 # end of main()
 
