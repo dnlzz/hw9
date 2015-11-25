@@ -9,7 +9,7 @@ import commands
 import re
 import sys
 
-#import MySQLdb
+import MySQLdb
 
 from xml.dom.minidom import parse, parseString
 
@@ -93,7 +93,9 @@ def tr_to_dict(lst):
 # mysql> describe most_active;
 def insert_to_db(l,tbl):
    # ............
-
+   handle.execute("select * from test")
+   for table in handle:
+      print table
    # show databases;
    # show tables;
    return 0
@@ -114,8 +116,14 @@ def main():
    print lst
       
    # make sure your mysql server is up and running
-   # db = mysql.connect('localhost', 'root', 'apple')
-   #cursor = insert_to_db(lst,fn) # fn = table name for mysql
+   db = MySQLdb.connect(host="localhost", user="root", passwd="apple", db="Stocks")
+   if db:
+      print "Connected"
+   global handle 
+   handle = db.cursor()
+   #res = handle.execute("SELECT * FROM test")
+
+   cursor = insert_to_db(lst,fn) # fn = table name for mysql
 
    #l = select_from_db(cursor,fn) # display the table on the screen
 
