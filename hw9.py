@@ -93,9 +93,28 @@ def tr_to_dict(lst):
 # mysql> describe most_active;
 def insert_to_db(l,tbl):
    # ............
+   """
    handle.execute("select * from test")
    for table in handle:
       print table
+   """
+   
+   print tbl
+   
+   create = "CREATE TABLE IF NOT EXISTS " + tbl + \
+            " ( "\
+            "`name` VARCHAR(50), "\
+            "`symbol` VARCHAR(6), "\
+            "`volume` VARCHAR(20), "\
+            "`price` VARCHAR(20), "\
+            "`change` VARCHAR(20), "\
+            "`percent_change` VARCHAR(20)"\
+            ");"
+
+   handle.execute(create)
+
+   
+
    # show databases;
    # show tables;
    return 0
@@ -113,7 +132,7 @@ def main():
    lst = extract_values(dom)
    
    #print "List of Lists"
-   print lst
+   #print lst
       
    # make sure your mysql server is up and running
    db = MySQLdb.connect(host="localhost", user="root", passwd="apple", db="Stocks")
@@ -121,7 +140,6 @@ def main():
       print "Connected"
    global handle 
    handle = db.cursor()
-   #res = handle.execute("SELECT * FROM test")
 
    cursor = insert_to_db(lst,fn) # fn = table name for mysql
 
