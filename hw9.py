@@ -107,13 +107,32 @@ def insert_to_db(l,tbl):
             "`symbol` VARCHAR(6), "\
             "`volume` VARCHAR(20), "\
             "`price` VARCHAR(20), "\
-            "`change` VARCHAR(20), "\
+            "`dollar_change` VARCHAR(20), "\
             "`percent_change` VARCHAR(20)"\
             ");"
 
    handle.execute(create)
 
-   
+   for stock in l:
+      stock['name'] = stock['name'].replace('\'','')
+      name = stock['name']
+      symbol = stock['symbol']
+      volume = stock['volume']
+      price = stock['price']
+      change = stock['change']
+      percent_change = stock['percent_change']
+
+      prefix = "INSERT INTO `" + tbl + "` (name, symbol, volume, price, dollar_change, percent_change)"
+      vals = "VALUES ( \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\' )" % (name, symbol, volume, price, change, percent_change)
+      cmd = prefix + " " + vals
+      
+      handle.execute(cmd)
+
+   handle.close()
+
+   #test = "INSERT INTO `" + tbl + "` (`name`, `symbol`, `volume`, `price`, `dollar_change`, `percent_change`) VALUES ('General Electric', 'GE', 'Ten', '4', '2', '33');"
+   #print test
+
 
    # show databases;
    # show tables;
@@ -142,6 +161,9 @@ def main():
    handle = db.cursor()
 
    cursor = insert_to_db(lst,fn) # fn = table name for mysql
+
+   db.commit()
+   db.close()
 
    #l = select_from_db(cursor,fn) # display the table on the screen
 
